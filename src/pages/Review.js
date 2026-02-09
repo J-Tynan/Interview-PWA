@@ -1,8 +1,15 @@
 import { createTopBar } from '../components/TopBar.js';
 
+function getStatusLabel(record) {
+  if (!record || record.state === 'empty') {
+    return 'Needs notes';
+  }
+  return record.state.charAt(0).toUpperCase() + record.state.slice(1);
+}
+
 export function renderReview({
   questions,
-  notes,
+  records,
   onOpenQuestion,
   onBack,
   theme,
@@ -51,7 +58,7 @@ export function renderReview({
     const status = document.createElement('span');
     status.className =
       'ml-3 app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
-    status.textContent = notes[question.id] ? 'Ready' : 'Needs notes';
+    status.textContent = getStatusLabel(records[question.id]);
 
     item.append(status);
     item.addEventListener('click', () => onOpenQuestion(question.id));

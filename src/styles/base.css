@@ -23,8 +23,8 @@
   --app-accent-contrast: #ffffff;
   --app-button: #0f172a;
   --app-button-text: #ffffff;
-  --app-page-pt: 2.5rem;
-  --app-page-pb: 2.5rem;
+  --app-page-pt: 1.25rem;
+  --app-page-pb: 1.25rem;
 }
 
 :root[data-theme='dark'] {
@@ -136,6 +136,13 @@
   --app-button-text: #15110e;
 }
 
+/* Adjust button vertical metrics for Ivory (serif) to visually center text */
+:root[data-style='ivory'] .app-button,
+:root[data-style='ivory'] .app-button-outline {
+  padding-block: 0.38rem; /* slightly larger than default to balance serif metrics */
+  line-height: 1;
+}
+
 /* Cobalt */
 :root[data-theme='light'][data-style='cobalt'] {
   --app-font: 'Sora', 'Trebuchet MS', sans-serif;
@@ -235,10 +242,18 @@
   border-radius: 999px;
 }
 
+.app-button,
+.app-button-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 999px;
+}
+
 .app-button {
   background: var(--app-button);
   color: var(--app-button-text);
-  border-radius: 999px;
   border: 1px solid transparent;
 }
 
@@ -246,7 +261,231 @@
   background: transparent;
   color: var(--app-text);
   border: 1px solid var(--app-border);
-  border-radius: 999px;
+}
+
+.app-button:disabled,
+.app-button-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.app-button,
+.app-button-outline {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.app-button:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-1px);
+}
+
+.app-button:active {
+  box-shadow: var(--app-shadow-soft);
+  transform: translateY(0);
+}
+
+.app-button-outline:hover {
+  background: var(--app-pill);
+  border-color: var(--app-accent);
+  box-shadow: var(--app-shadow-soft);
+  transform: translateY(-1px);
+}
+
+.app-button-outline:active {
+  background: var(--app-accent);
+  color: var(--app-accent-contrast);
+  border-color: var(--app-accent);
+  box-shadow: var(--app-shadow-soft);
+  transform: translateY(0);
+}
+
+.app-button-outline[aria-pressed='true'] {
+  background: var(--app-accent);
+  color: var(--app-accent-contrast);
+  border-color: var(--app-accent);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.app-button-outline[aria-pressed='true']:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-1px);
+}
+
+.app-button-outline[aria-pressed='true']:active {
+  box-shadow: var(--app-shadow-soft);
+  transform: translateY(0);
+}
+
+/* Disable elevation/hover/active effects for specific controls (e.g. theme toggle) */
+.app-no-elevate {
+  transition: none !important;
+}
+
+.app-no-elevate:hover,
+.app-no-elevate:active {
+  background: transparent !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.app-no-elevate[aria-pressed='true'] {
+  /* Keep the pressed visual stable but don't animate */
+  background: var(--app-accent) !important;
+  color: var(--app-accent-contrast) !important;
+  border-color: var(--app-accent) !important;
+  box-shadow: none !important;
+}
+
+.app-no-elevate[aria-pressed='true']:hover,
+.app-no-elevate[aria-pressed='true']:active {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.app-step {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--app-radius-sm);
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font-size: 0.95rem;
+}
+
+.app-step-index {
+  font-weight: 600;
+  color: var(--app-muted);
+}
+
+.app-step--active {
+  border-color: var(--app-accent);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.app-step--revealed {
+  animation: app-step-in 0.3s ease;
+}
+
+@keyframes app-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-toast {
+  margin-top: 1rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-muted);
+}
+
+.app-toast--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.app-toast--strong {
+  color: var(--app-text);
+}
+
+.app-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+}
+
+.app-hidden {
+  display: none !important;
+}
+
+.app-dialog {
+  width: min(92vw, 32rem);
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  padding: 1.5rem;
+  box-shadow: var(--app-shadow);
+}
+
+.app-diagram {
+  width: 100%;
+  height: auto;
+}
+
+.app-diagram-shell {
+  border-radius: var(--app-radius-sm);
+  background: var(--app-input);
+  padding: 0.5rem;
+}
+
+.app-diagram-node {
+  fill: var(--app-surface);
+  stroke: var(--app-border);
+  stroke-width: 2;
+}
+
+.app-diagram-text {
+  fill: var(--app-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.app-diagram-line {
+  stroke: var(--app-border);
+  stroke-width: 2;
+}
+
+.app-diagram-label {
+  fill: var(--app-muted);
+  font-size: 10px;
+}
+
+.app-diagram--minimal .app-diagram-text,
+.app-diagram--minimal .app-diagram-label {
+  opacity: 0;
+}
+
+.app-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-text);
 }
 
 .app-input,
@@ -281,4 +520,8 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@media (max-width: 640px) {
+  :root { --app-page-pt: 1rem; }
 }

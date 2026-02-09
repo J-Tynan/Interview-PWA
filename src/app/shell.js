@@ -4,68 +4,31 @@ import { applyTheme, loadTheme, saveTheme, setStyle, STYLE_PRESETS, toggleMode }
 import { renderDashboard } from '../pages/Dashboard.js';
 import { renderQuestionDetail } from '../pages/QuestionDetail.js';
 import { renderReview } from '../pages/Review.js';
+import {
+  deleteQuestionRecord,
+  getAllQuestionRecords,
+  getLegacyNotes,
+  saveQuestionRecord
+} from '../lib/storage.js';
 
-const STORAGE_KEY = 'interview-pwa-notes';
+function createDefaultRecord(question, note = '') {
+  const now = new Date().toISOString();
+  const progress = {
+    lastReviewed: question.progress?.lastReviewed ?? null,
+    reviewCount: question.progress?.reviewCount ?? 0,
+    difficultyMark: question.progress?.difficultyMark ?? '',
+    updatedAt: question.progress?.updatedAt ?? null
+  };
 
-async function openNotesDB() {
-  if (!('indexedDB' in window)) {
-    return null;
-  }
-
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('interview-pwa', 1);
-
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('notes')) {
-        db.createObjectStore('notes', { keyPath: 'questionId' });
-      }
-    };
-
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
-
-async function loadNotesFromIDB(db) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('notes', 'readonly');
-    const store = tx.objectStore('notes');
-    const request = store.getAll();
-
-    request.onsuccess = () => {
-      const records = request.result || [];
-      const notes = {};
-      for (const record of records) {
-        notes[record.questionId] = record.note;
-      }
-      resolve(notes);
-    };
-
-    request.onerror = () => reject(request.error);
-  });
-}
-
-async function saveNoteToIDB(db, questionId, note) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('notes', 'readwrite');
-    const store = tx.objectStore('notes');
-    store.put({ questionId, note });
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-function loadNotesFromLocalStorage() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  } catch {
-    return {};
-  }
-}
-
-function saveNotesToLocalStorage(notes) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  return {
+    id: question.id,
+    notes: note,
+    notesMode: 'plain',
+    state: note && note.trim() ? 'draft' : (question.state || 'empty'),
+    progress,
+    updatedAt: now,
+    history: []
+  };
 }
 
 export async function initShell(root) {
@@ -76,12 +39,19 @@ export async function initShell(root) {
   let theme = loadTheme();
   applyTheme(theme);
 
-  const db = await openNotesDB().catch(() => null);
-  const notes = db ? await loadNotesFromIDB(db) : loadNotesFromLocalStorage();
+  const records = await getAllQuestionRecords();
+  const legacyNotes = await getLegacyNotes();
+
+  for (const question of questions) {
+    if (!records[question.id] && legacyNotes[question.id]) {
+      const record = createDefaultRecord(question, legacyNotes[question.id]);
+      records[question.id] = await saveQuestionRecord(record);
+    }
+  }
 
   const state = {
     questions,
-    notes
+    records
   };
 
   let currentRoute = null;
@@ -107,14 +77,15 @@ export async function initShell(root) {
       root.append(
         renderQuestionDetail({
           question,
-          note: state.notes[questionId] || '',
-          onSaveNote: async (nextNote) => {
-            state.notes[questionId] = nextNote;
-            if (db) {
-              await saveNoteToIDB(db, questionId, nextNote);
-            } else {
-              saveNotesToLocalStorage(state.notes);
-            }
+          record: state.records[questionId] || null,
+          onSaveRecord: async (nextRecord) => {
+            const saved = await saveQuestionRecord(nextRecord);
+            state.records[saved.id] = saved;
+            return saved;
+          },
+          onDeleteRecord: async (id) => {
+            await deleteQuestionRecord(id);
+            delete state.records[id];
           },
           onBack: () => router.navigate('/'),
           theme,
@@ -130,8 +101,8 @@ export async function initShell(root) {
       root.append(
         renderReview({
           questions: state.questions,
-          notes: state.notes,
-          onOpenQuestion: (id) => router.navigate(`/question/${id}`),
+          records: state.records,
+          onOpenQuestion: (id) => router.navigateTo('question', { id }),
           onBack: () => router.navigate('/'),
           theme,
           styles: STYLE_PRESETS,
@@ -145,8 +116,8 @@ export async function initShell(root) {
     root.append(
       renderDashboard({
         questions: state.questions,
-        notes: state.notes,
-        onOpenQuestion: (id) => router.navigate(`/question/${id}`),
+        records: state.records,
+        onOpenQuestion: (id) => router.navigateTo('question', { id }),
         onOpenReview: () => router.navigate('/review'),
         theme,
         styles: STYLE_PRESETS,

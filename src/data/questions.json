@@ -22,7 +22,6 @@
     "state": "empty",
     "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
     "tags": ["latency", "profiling", "query-optimization"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
@@ -50,7 +49,6 @@
     "state": "empty",
     "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
     "tags": ["queues", "fanout", "delivery-guarantees", "observability"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
@@ -77,7 +75,6 @@
     "state": "empty",
     "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
     "tags": ["communication", "conflict-resolution", "decision-making"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
@@ -104,7 +101,6 @@
     "state": "empty",
     "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
     "tags": ["roadmap", "prioritization", "stakeholders", "trade-offs"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
@@ -132,7 +128,6 @@
     "state": "empty",
     "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
     "tags": ["migration", "risk", "rollback", "observability"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
@@ -159,7 +154,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["memory-leak", "profiling", "heap-snapshot"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -186,7 +180,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["caching", "cache-invalidation", "consistency"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -213,7 +206,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["mentorship", "coaching", "feedback-loop"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -240,7 +232,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["estimation", "planning", "uncertainty"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -267,7 +258,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["consistency", "replication", "trade-offs"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -294,7 +284,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["incident-response", "postmortem", "runbooks"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -321,7 +310,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["architecture", "microservices", "monolith"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -348,7 +336,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["scope-creep", "change-control", "stakeholders"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -375,7 +362,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["alerting", "sli-slo", "observability"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"
@@ -402,7 +388,6 @@
     "state": "empty",
     "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
     "tags": ["feature-flags", "rollout", "technical-debt"],
-    "visualStyle": "Ivory-Editorial",
     "createdAt": "2026-02-09T11:10:00Z",
     "updatedAt": "2026-02-09T11:10:00Z",
     "schemaVersion": "1.0"

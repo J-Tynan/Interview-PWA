@@ -1,4 +1,4 @@
-export function createTopBar({ theme, styles, onToggleMode, onStyleChange }) {
+export function createTopBar({ theme, styles, onToggleMode, onStyleChange, action }) {
   const bar = document.createElement('section');
   bar.className = 'flex flex-wrap items-center justify-end gap-3 pb-6';
 
@@ -7,7 +7,9 @@ export function createTopBar({ theme, styles, onToggleMode, onStyleChange }) {
 
   const modeButton = document.createElement('button');
   modeButton.type = 'button';
-  modeButton.className = 'app-button-outline px-4 py-2 text-sm font-semibold app-focus';
+  // `app-no-elevate` disables the hover/active elevation and color transitions for
+  // the Light/Dark toggle so it doesn't shift when toggled.
+  modeButton.className = 'app-button-outline app-no-elevate px-4 py-2 text-sm font-semibold app-focus';
   modeButton.setAttribute('aria-pressed', theme.mode === 'dark' ? 'true' : 'false');
   modeButton.textContent = theme.mode === 'dark' ? 'Dark' : 'Light';
   modeButton.addEventListener('click', () => onToggleMode());
@@ -39,6 +41,9 @@ export function createTopBar({ theme, styles, onToggleMode, onStyleChange }) {
   styleLabel.textContent = 'Style';
 
   styleGroup.append(styleLabel, select);
+  if (action) {
+    controls.append(action);
+  }
   controls.append(modeButton, styleGroup);
   bar.append(controls);
 

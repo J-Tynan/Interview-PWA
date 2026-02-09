@@ -1,10 +1,22 @@
 import { createQuestionCard } from '../components/QuestionCard.js';
 import { createProgressBar } from '../components/ProgressBar.js';
 import { createTopBar } from '../components/TopBar.js';
+import { createHelpOverlay } from '../components/HelpOverlay.js';
+
+function hasNotes(record) {
+  if (!record || !record.notes) {
+    return false;
+  }
+  if (typeof record.notes === 'string') {
+    return Boolean(record.notes.trim());
+  }
+  const sections = record.notes.sections || [];
+  return sections.some((section) => section && section.trim());
+}
 
 export function renderDashboard({
   questions,
-  notes,
+  records,
   onOpenQuestion,
   onOpenReview,
   theme,
@@ -20,11 +32,17 @@ export function renderDashboard({
   const page = document.createElement('main');
   page.className = 'mx-auto flex min-h-screen max-w-5xl flex-col px-6 app-page';
 
+  const helpButton = document.createElement('button');
+  helpButton.type = 'button';
+  helpButton.className = 'app-button-outline app-no-elevate px-4 py-2 text-sm font-semibold app-focus';
+  helpButton.textContent = 'Keyboard help';
+
   const topBar = createTopBar({
     theme,
     styles,
     onToggleMode: onToggleTheme,
-    onStyleChange
+    onStyleChange,
+    action: helpButton
   });
 
   const header = document.createElement('header');
@@ -45,7 +63,7 @@ export function renderDashboard({
   reviewButton.addEventListener('click', onOpenReview);
   header.append(reviewButton);
 
-  const answeredCount = questions.filter((q) => notes[q.id]).length;
+  const answeredCount = questions.filter((q) => hasNotes(records[q.id])).length;
   page.append(topBar, header, createProgressBar({ current: answeredCount, total: questions.length }));
 
   const groupWrap = document.createElement('section');
@@ -227,7 +245,7 @@ export function renderDashboard({
       sortQuestions(questions).forEach((question) => {
         const card = createQuestionCard({
           question,
-          isAnswered: Boolean(notes[question.id]),
+          record: records[question.id],
           onOpen: onOpenQuestion,
           isCompact: activeView === 'compact'
         });
@@ -270,7 +288,7 @@ export function renderDashboard({
         sortQuestions(groupQuestions).forEach((question) => {
           const card = createQuestionCard({
             question,
-            isAnswered: Boolean(notes[question.id]),
+            record: records[question.id],
             onOpen: onOpenQuestion,
             isCompact: activeView === 'compact'
           });
@@ -334,6 +352,11 @@ export function renderDashboard({
   footer.textContent = 'Local-first notes stored in your browser.';
 
   page.append(groupWrap, controlWrap, content, footer);
+
+  // Shared keyboard help overlay (same as used in QuestionDetail)
+  const helpOverlay = createHelpOverlay();
+  helpButton.addEventListener('click', helpOverlay.open);
+  page.append(helpOverlay.element);
 
   return page;
 }
