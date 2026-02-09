@@ -44,6 +44,11 @@ screenshots/
 # Service worker artifacts (if generated)
 .workbox/
 
+# Generated artifacts and caches
+*.map
+.nyc_output/
+.cache/
+
 # Lockfiles (optional to ignore in some workflows)
 # package-lock.json
 # yarn.lock
