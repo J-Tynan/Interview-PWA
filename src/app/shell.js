@@ -1,5 +1,6 @@
 import questions from '../data/questions.json';
 import { createRouter } from './router.js';
+import { applyTheme, loadTheme, saveTheme, setStyle, STYLE_PRESETS, toggleMode } from './theme.js';
 import { renderDashboard } from '../pages/Dashboard.js';
 import { renderQuestionDetail } from '../pages/QuestionDetail.js';
 import { renderReview } from '../pages/Review.js';
@@ -72,6 +73,9 @@ export async function initShell(root) {
     return;
   }
 
+  let theme = loadTheme();
+  applyTheme(theme);
+
   const db = await openNotesDB().catch(() => null);
   const notes = db ? await loadNotesFromIDB(db) : loadNotesFromLocalStorage();
 
@@ -80,9 +84,23 @@ export async function initShell(root) {
     notes
   };
 
-  const router = createRouter((route) => {
-    root.innerHTML = '';
+  let currentRoute = null;
 
+  const updateTheme = (nextTheme) => {
+    theme = nextTheme;
+    applyTheme(theme);
+    saveTheme(theme);
+    if (currentRoute) {
+      renderRoute(currentRoute);
+    }
+  };
+
+  const handleToggleTheme = () => updateTheme(toggleMode(theme));
+  const handleStyleChange = (style) => updateTheme(setStyle(theme, style));
+
+  const renderRoute = (route) => {
+    currentRoute = route;
+    root.innerHTML = '';
     if (route.path === 'question') {
       const questionId = route.params[0];
       const question = state.questions.find((item) => item.id === questionId);
@@ -98,7 +116,11 @@ export async function initShell(root) {
               saveNotesToLocalStorage(state.notes);
             }
           },
-          onBack: () => router.navigate('/')
+          onBack: () => router.navigate('/'),
+          theme,
+          styles: STYLE_PRESETS,
+          onToggleTheme: handleToggleTheme,
+          onStyleChange: handleStyleChange
         })
       );
       return;
@@ -110,7 +132,11 @@ export async function initShell(root) {
           questions: state.questions,
           notes: state.notes,
           onOpenQuestion: (id) => router.navigate(`/question/${id}`),
-          onBack: () => router.navigate('/')
+          onBack: () => router.navigate('/'),
+          theme,
+          styles: STYLE_PRESETS,
+          onToggleTheme: handleToggleTheme,
+          onStyleChange: handleStyleChange
         })
       );
       return;
@@ -121,10 +147,16 @@ export async function initShell(root) {
         questions: state.questions,
         notes: state.notes,
         onOpenQuestion: (id) => router.navigate(`/question/${id}`),
-        onOpenReview: () => router.navigate('/review')
+        onOpenReview: () => router.navigate('/review'),
+        theme,
+        styles: STYLE_PRESETS,
+        onToggleTheme: handleToggleTheme,
+        onStyleChange: handleStyleChange
       })
     );
-  });
+  };
+
+  const router = createRouter((route) => renderRoute(route));
 
   router.start();
 

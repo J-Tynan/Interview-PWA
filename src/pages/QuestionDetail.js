@@ -1,34 +1,51 @@
 import { createEditor } from '../components/Editor.js';
+import { createTopBar } from '../components/TopBar.js';
 
-export function renderQuestionDetail({ question, note, onSaveNote, onBack }) {
+export function renderQuestionDetail({
+  question,
+  note,
+  onSaveNote,
+  onBack,
+  theme,
+  styles,
+  onToggleTheme,
+  onStyleChange
+}) {
   const page = document.createElement('main');
-  page.className = 'mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-10';
+  page.className = 'mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-6';
+
+  const topBar = createTopBar({
+    theme,
+    styles,
+    onToggleMode: onToggleTheme,
+    onStyleChange
+  });
 
   const backButton = document.createElement('button');
   backButton.type = 'button';
   backButton.className =
-    'w-fit rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+    'w-fit app-button-outline px-4 py-2 text-sm font-semibold transition app-focus';
   backButton.textContent = 'Back to dashboard';
   backButton.addEventListener('click', onBack);
 
   if (!question) {
     const message = document.createElement('p');
-    message.className = 'mt-6 text-sm text-slate-500';
+    message.className = 'mt-6 text-sm app-muted';
     message.textContent = 'Question not found.';
-    page.append(backButton, message);
+    page.append(topBar, backButton, message);
     return page;
   }
 
   const header = document.createElement('section');
-  header.className = 'mt-6 rounded-2xl border border-slate-200 bg-white p-6';
+  header.className = 'mt-6 app-card p-6';
   header.innerHTML = `
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">${question.category}</p>
-    <h1 class="mt-3 text-2xl font-semibold text-slate-900">${question.prompt}</h1>
-    <p class="mt-3 text-sm text-slate-500">${question.brief}</p>
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] app-muted">${question.category}</p>
+    <h1 class="mt-3 text-2xl font-semibold">${question.prompt}</h1>
+    <p class="mt-3 text-sm app-muted">${question.brief}</p>
   `;
 
   const list = document.createElement('ul');
-  list.className = 'mt-4 space-y-2 text-sm text-slate-600';
+  list.className = 'mt-4 space-y-2 text-sm app-muted';
   question.prompts.forEach((item) => {
     const li = document.createElement('li');
     li.textContent = `• ${item}`;
@@ -41,7 +58,7 @@ export function renderQuestionDetail({ question, note, onSaveNote, onBack }) {
     onSave: onSaveNote
   });
 
-  page.append(backButton, header, editor);
+  page.append(topBar, backButton, header, editor);
 
   return page;
 }

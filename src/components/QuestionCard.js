@@ -1,22 +1,22 @@
 export function createQuestionCard({ question, isAnswered, onOpen }) {
   const card = document.createElement('article');
   card.className =
-    'group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+    'group app-card p-5 transition app-focus cursor-pointer';
   card.tabIndex = 0;
   card.setAttribute('role', 'button');
   card.setAttribute('aria-pressed', 'false');
 
   const title = document.createElement('h3');
-  title.className = 'text-lg font-semibold text-slate-900';
+  title.className = 'text-lg font-semibold';
   title.textContent = question.prompt;
 
   const meta = document.createElement('p');
-  meta.className = 'mt-2 text-sm text-slate-500';
+  meta.className = 'mt-2 text-sm app-muted';
   meta.textContent = `${question.category} · ${question.difficulty}`;
 
   const status = document.createElement('span');
   status.className =
-    'mt-3 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600';
+    'mt-3 inline-flex items-center app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
   status.textContent = isAnswered ? 'Notes saved' : 'Needs notes';
 
   card.append(title, meta, status);

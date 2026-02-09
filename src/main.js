@@ -1,4 +1,3 @@
-import './styles/base.css';
 import { initShell } from './app/shell.js';
 
 window.addEventListener('DOMContentLoaded', () => {

@@ -1,21 +1,39 @@
-export function renderReview({ questions, notes, onOpenQuestion, onBack }) {
+import { createTopBar } from '../components/TopBar.js';
+
+export function renderReview({
+  questions,
+  notes,
+  onOpenQuestion,
+  onBack,
+  theme,
+  styles,
+  onToggleTheme,
+  onStyleChange
+}) {
   const page = document.createElement('main');
-  page.className = 'mx-auto flex min-h-screen max-w-4xl flex-col px-6 py-10';
+  page.className = 'mx-auto flex min-h-screen max-w-4xl flex-col px-6 py-6';
+
+  const topBar = createTopBar({
+    theme,
+    styles,
+    onToggleMode: onToggleTheme,
+    onStyleChange
+  });
 
   const header = document.createElement('header');
   header.className = 'flex flex-wrap items-center justify-between gap-4';
   header.innerHTML = `
     <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Review mode</p>
-      <h1 class="mt-2 text-3xl font-semibold text-slate-900">Focus areas</h1>
-      <p class="mt-2 text-sm text-slate-500">Quickly jump back into unanswered questions.</p>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] app-muted">Review mode</p>
+      <h1 class="mt-2 text-3xl font-semibold">Focus areas</h1>
+      <p class="mt-2 text-sm app-muted">Quickly jump back into unanswered questions.</p>
     </div>
   `;
 
   const backButton = document.createElement('button');
   backButton.type = 'button';
   backButton.className =
-    'rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+    'app-button-outline px-4 py-2 text-sm font-semibold transition app-focus';
   backButton.textContent = 'Back to dashboard';
   backButton.addEventListener('click', onBack);
   header.append(backButton);
@@ -27,12 +45,12 @@ export function renderReview({ questions, notes, onOpenQuestion, onBack }) {
     const item = document.createElement('button');
     item.type = 'button';
     item.className =
-      'flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 text-left text-sm font-semibold text-slate-800 transition hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+      'flex w-full items-center justify-between app-card px-5 py-4 text-left text-sm font-semibold transition app-focus';
     item.textContent = `${question.prompt}`;
 
     const status = document.createElement('span');
     status.className =
-      'ml-3 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600';
+      'ml-3 app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
     status.textContent = notes[question.id] ? 'Ready' : 'Needs notes';
 
     item.append(status);
@@ -40,7 +58,7 @@ export function renderReview({ questions, notes, onOpenQuestion, onBack }) {
     list.append(item);
   });
 
-  page.append(header, list);
+  page.append(topBar, header, list);
 
   return page;
 }

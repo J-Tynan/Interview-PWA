@@ -1,14 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Manrope:wght@400;600;700&family=Newsreader:wght@400;600;700&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
+  --app-radius: 20px;
+  --app-radius-sm: 14px;
+  --app-letter: 0.01em;
+  --app-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
+  --app-shadow-soft: 0 10px 20px rgba(15, 23, 42, 0.05);
+  --app-font: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  --app-bg: #f8fafc;
+  --app-surface: #ffffff;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+  --app-border: #e2e8f0;
+  --app-pill: #f1f5f9;
+  --app-input: #f8fafc;
+  --app-accent: #16a34a;
+  --app-accent-contrast: #ffffff;
+  --app-button: #0f172a;
+  --app-button-text: #ffffff;
 }
 
-body {
-  font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
-  letter-spacing: 0.01em;
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Atlas */
+:root[data-theme='light'][data-style='atlas'] {
+  --app-font: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  --app-radius: 20px;
+  --app-radius-sm: 14px;
+  --app-bg: #f8fafc;
+  --app-surface: #ffffff;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+  --app-border: #e2e8f0;
+  --app-pill: #f1f5f9;
+  --app-input: #f8fafc;
+  --app-accent: #16a34a;
+  --app-accent-contrast: #ffffff;
+  --app-button: #0f172a;
+  --app-button-text: #ffffff;
+}
+
+:root[data-theme='dark'][data-style='atlas'] {
+  --app-font: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  --app-radius: 20px;
+  --app-radius-sm: 14px;
+  --app-bg: #0b1220;
+  --app-surface: #0f172a;
+  --app-text: #e2e8f0;
+  --app-muted: #94a3b8;
+  --app-border: #1f2937;
+  --app-pill: #111827;
+  --app-input: #0b1220;
+  --app-accent: #22c55e;
+  --app-accent-contrast: #0b1220;
+  --app-button: #e2e8f0;
+  --app-button-text: #0b1220;
+}
+
+/* Graphite */
+:root[data-theme='light'][data-style='graphite'] {
+  --app-font: 'Manrope', 'Trebuchet MS', sans-serif;
+  --app-radius: 16px;
+  --app-radius-sm: 12px;
+  --app-bg: #f5f5f7;
+  --app-surface: #ffffff;
+  --app-text: #111827;
+  --app-muted: #6b7280;
+  --app-border: #e5e7eb;
+  --app-pill: #f3f4f6;
+  --app-input: #f7f7f8;
+  --app-accent: #06b6d4;
+  --app-accent-contrast: #0f172a;
+  --app-button: #111827;
+  --app-button-text: #f9fafb;
+}
+
+:root[data-theme='dark'][data-style='graphite'] {
+  --app-font: 'Manrope', 'Trebuchet MS', sans-serif;
+  --app-radius: 16px;
+  --app-radius-sm: 12px;
+  --app-bg: #0a0c10;
+  --app-surface: #111827;
+  --app-text: #e5e7eb;
+  --app-muted: #9ca3af;
+  --app-border: #1f2937;
+  --app-pill: #141a26;
+  --app-input: #0f1520;
+  --app-accent: #22d3ee;
+  --app-accent-contrast: #0a0c10;
+  --app-button: #e5e7eb;
+  --app-button-text: #0a0c10;
+}
+
+/* Ivory */
+:root[data-theme='light'][data-style='ivory'] {
+  --app-font: 'Newsreader', 'Times New Roman', serif;
+  --app-radius: 10px;
+  --app-radius-sm: 8px;
+  --app-bg: #fbf7f2;
+  --app-surface: #ffffff;
+  --app-text: #2f2a24;
+  --app-muted: #7a6f66;
+  --app-border: #e7ddd2;
+  --app-pill: #f2e8dc;
+  --app-input: #fbf7f2;
+  --app-accent: #6b8b5e;
+  --app-accent-contrast: #ffffff;
+  --app-button: #2f2a24;
+  --app-button-text: #ffffff;
+}
+
+:root[data-theme='dark'][data-style='ivory'] {
+  --app-font: 'Newsreader', 'Times New Roman', serif;
+  --app-radius: 10px;
+  --app-radius-sm: 8px;
+  --app-bg: #15110e;
+  --app-surface: #1b1612;
+  --app-text: #f1e9df;
+  --app-muted: #b8a99d;
+  --app-border: #2f261f;
+  --app-pill: #221a15;
+  --app-input: #171210;
+  --app-accent: #a3c28c;
+  --app-accent-contrast: #15110e;
+  --app-button: #f1e9df;
+  --app-button-text: #15110e;
+}
+
+/* Cobalt */
+:root[data-theme='light'][data-style='cobalt'] {
+  --app-font: 'Sora', 'Trebuchet MS', sans-serif;
+  --app-radius: 18px;
+  --app-radius-sm: 12px;
+  --app-bg: #f4f7ff;
+  --app-surface: #ffffff;
+  --app-text: #0b1b3a;
+  --app-muted: #54658c;
+  --app-border: #dbe3f5;
+  --app-pill: #eaf0ff;
+  --app-input: #f4f7ff;
+  --app-accent: #3b82f6;
+  --app-accent-contrast: #ffffff;
+  --app-button: #0b1b3a;
+  --app-button-text: #ffffff;
+}
+
+:root[data-theme='dark'][data-style='cobalt'] {
+  --app-font: 'Sora', 'Trebuchet MS', sans-serif;
+  --app-radius: 18px;
+  --app-radius-sm: 12px;
+  --app-bg: #0a1022;
+  --app-surface: #121a30;
+  --app-text: #dbeafe;
+  --app-muted: #8aa0c9;
+  --app-border: #1f2a44;
+  --app-pill: #172037;
+  --app-input: #0e1528;
+  --app-accent: #60a5fa;
+  --app-accent-contrast: #0a1022;
+  --app-button: #dbeafe;
+  --app-button-text: #0a1022;
+}
+
+/* Monarch */
+:root[data-theme='light'][data-style='monarch'] {
+  --app-font: 'DM Sans', 'Trebuchet MS', sans-serif;
+  --app-radius: 24px;
+  --app-radius-sm: 16px;
+  --app-bg: #f8f1ea;
+  --app-surface: #fffaf6;
+  --app-text: #3a1f21;
+  --app-muted: #7a5d60;
+  --app-border: #ead9d0;
+  --app-pill: #f3e4db;
+  --app-input: #f8f1ea;
+  --app-accent: #9f1239;
+  --app-accent-contrast: #ffffff;
+  --app-button: #3a1f21;
+  --app-button-text: #ffffff;
+}
+
+:root[data-theme='dark'][data-style='monarch'] {
+  --app-font: 'DM Sans', 'Trebuchet MS', sans-serif;
+  --app-radius: 24px;
+  --app-radius-sm: 16px;
+  --app-bg: #1a0f12;
+  --app-surface: #241416;
+  --app-text: #f6e8e1;
+  --app-muted: #c7a8aa;
+  --app-border: #3a2326;
+  --app-pill: #2a171a;
+  --app-input: #1f1316;
+  --app-accent: #fb7185;
+  --app-accent-contrast: #1a0f12;
+  --app-button: #f6e8e1;
+  --app-button-text: #1a0f12;
+}
+
+.app-body {
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: var(--app-font);
+  letter-spacing: var(--app-letter);
+}
+
+.app-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.app-muted {
+  color: var(--app-muted);
+}
+
+.app-pill {
+  background: var(--app-pill);
+  color: var(--app-muted);
+  border-radius: 999px;
+}
+
+.app-button {
+  background: var(--app-button);
+  color: var(--app-button-text);
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.app-button-outline {
+  background: transparent;
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+}
+
+.app-input,
+.app-select {
+  background: var(--app-input);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+}
+
+.app-track {
+  background: var(--app-pill);
+}
+
+.app-accent {
+  background: var(--app-accent);
+}
+
+.app-focus:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
 }
 
 /* Swap in DaisyUI or shadcn/ui styles here if you adopt a UI kit later. */

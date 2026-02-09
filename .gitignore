@@ -39,6 +39,7 @@ coverage/
 # Misc
 *.swp
 .eslintcache
+screenshots/
 
 # Service worker artifacts (if generated)
 .workbox/
