@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q-programming",
+    "category": "Programming",
+    "difficulty": "Intermediate",
+    "prompt": "Explain how you would optimize a slow API endpoint.",
+    "brief": "Walk through profiling, bottleneck isolation, and incremental improvements.",
+    "prompts": [
+      "Where do you measure latency?",
+      "What trade-offs do you consider?",
+      "How do you validate the improvement?"
+    ]
+  },
+  {
+    "id": "q-system-design",
+    "category": "System Design",
+    "difficulty": "Senior",
+    "prompt": "Design a scalable notification system for millions of users.",
+    "brief": "Discuss queueing, fan-out, reliability, and rate limiting.",
+    "prompts": [
+      "How do you ensure delivery guarantees?",
+      "How do you handle bursts?",
+      "Where do you store preferences?"
+    ]
+  },
+  {
+    "id": "q-behavioral",
+    "category": "Behavioral",
+    "difficulty": "Core",
+    "prompt": "Tell me about a time you handled conflicting feedback.",
+    "brief": "Focus on alignment, communication, and outcomes.",
+    "prompts": [
+      "What was the conflict?",
+      "How did you decide?",
+      "What did you learn?"
+    ]
+  },
+  {
+    "id": "q-project-management",
+    "category": "Project Management",
+    "difficulty": "Intermediate",
+    "prompt": "How do you plan a roadmap with uncertain requirements?",
+    "brief": "Highlight discovery, milestones, and stakeholder updates.",
+    "prompts": [
+      "What data do you gather?",
+      "How do you set milestones?",
+      "How do you communicate risk?"
+    ]
+  },
+  {
+    "id": "q-risk-mitigation",
+    "category": "Risk Mitigation",
+    "difficulty": "Senior",
+    "prompt": "Describe how you de-risk a critical migration.",
+    "brief": "Cover phased rollout, backups, and monitoring.",
+    "prompts": [
+      "What is the rollback plan?",
+      "How do you test in production?",
+      "How do you monitor success?"
+    ]
+  }
+]
