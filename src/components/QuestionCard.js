@@ -8,7 +8,7 @@ export function createQuestionCard({ question, isAnswered, onOpen }) {
 
   const title = document.createElement('h3');
   title.className = 'text-lg font-semibold';
-  title.textContent = question.prompt;
+  title.textContent = question.title;
 
   const meta = document.createElement('p');
   meta.className = 'mt-2 text-sm app-muted';

@@ -1,62 +1,140 @@
 [
   {
-    "id": "q-programming",
+    "id": "q1",
+    "title": "Optimize a slow API endpoint",
     "category": "Programming",
+    "type": "process",
     "difficulty": "Intermediate",
-    "prompt": "Explain how you would optimize a slow API endpoint.",
-    "brief": "Walk through profiling, bottleneck isolation, and incremental improvements.",
-    "prompts": [
-      "Where do you measure latency?",
-      "What trade-offs do you consider?",
-      "How do you validate the improvement?"
-    ]
+    "bullets": [
+      "Identify the slowest segment with traces",
+      "Isolate database vs compute bottlenecks",
+      "Propose low-risk optimizations first",
+      "Define success metrics and validate",
+      "Roll out safely and monitor regressions"
+    ],
+    "diagramHints": {
+      "shape": "timeline",
+      "nodes": ["Client", "API", "DB", "Cache"],
+      "edges": ["p95 latency", "query time", "cache hit"]
+    },
+    "examples": ["p95 latency", "profiling", "indexing"],
+    "notes": "",
+    "state": "empty",
+    "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
+    "tags": ["latency", "profiling", "query-optimization"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T12:00:00Z",
+    "updatedAt": "2026-02-09T12:00:00Z",
+    "schemaVersion": "1.0"
   },
   {
-    "id": "q-system-design",
+    "id": "q2",
+    "title": "Design a notification fanout system",
     "category": "System Design",
+    "type": "system",
     "difficulty": "Senior",
-    "prompt": "Design a scalable notification system for millions of users.",
-    "brief": "Discuss queueing, fan-out, reliability, and rate limiting.",
-    "prompts": [
-      "How do you ensure delivery guarantees?",
-      "How do you handle bursts?",
-      "Where do you store preferences?"
-    ]
+    "bullets": [
+      "Clarify channels, scale, and SLAs",
+      "Choose fanout strategy and queues",
+      "Model preferences and delivery state",
+      "Handle retries, backoff, and rate limits",
+      "Define observability and failure modes"
+    ],
+    "diagramHints": {
+      "shape": "graph",
+      "nodes": ["Producer", "Queue", "Workers", "APNS/FCM"],
+      "edges": ["fanout", "retry", "throttle"]
+    },
+    "examples": ["fanout", "rate-limits", "dead-letter"],
+    "notes": "",
+    "state": "empty",
+    "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
+    "tags": ["queues", "fanout", "delivery-guarantees", "observability"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T12:00:00Z",
+    "updatedAt": "2026-02-09T12:00:00Z",
+    "schemaVersion": "1.0"
   },
   {
-    "id": "q-behavioral",
+    "id": "q3",
+    "title": "Handle conflicting stakeholder feedback",
     "category": "Behavioral",
+    "type": "narrative",
     "difficulty": "Core",
-    "prompt": "Tell me about a time you handled conflicting feedback.",
-    "brief": "Focus on alignment, communication, and outcomes.",
-    "prompts": [
-      "What was the conflict?",
-      "How did you decide?",
-      "What did you learn?"
-    ]
+    "bullets": [
+      "Summarize the conflict clearly",
+      "Explain how you aligned on goals",
+      "Describe the decision process",
+      "Share the outcome and impact"
+    ],
+    "diagramHints": {
+      "shape": "flow",
+      "nodes": ["Inputs", "Alignment", "Decision", "Outcome"],
+      "edges": ["constraints", "trade-offs", "result"]
+    },
+    "examples": ["alignment", "trade-offs", "stakeholders"],
+    "notes": "",
+    "state": "empty",
+    "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
+    "tags": ["communication", "conflict-resolution", "decision-making"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T12:00:00Z",
+    "updatedAt": "2026-02-09T12:00:00Z",
+    "schemaVersion": "1.0"
   },
   {
-    "id": "q-project-management",
+    "id": "q4",
+    "title": "Prioritize a roadmap with uncertainty",
     "category": "Project Management",
+    "type": "judgment",
     "difficulty": "Intermediate",
-    "prompt": "How do you plan a roadmap with uncertain requirements?",
-    "brief": "Highlight discovery, milestones, and stakeholder updates.",
-    "prompts": [
-      "What data do you gather?",
-      "How do you set milestones?",
-      "How do you communicate risk?"
-    ]
+    "bullets": [
+      "Identify goals, constraints, and risks",
+      "Define evaluation criteria and weights",
+      "Compare options and document trade-offs",
+      "Set milestones and review cadence"
+    ],
+    "diagramHints": {
+      "shape": "matrix",
+      "nodes": ["Goals", "Options", "Scores", "Roadmap"],
+      "edges": ["weights", "rank", "sequence"]
+    },
+    "examples": ["moscow", "impact-vs-effort", "risk-buffers"],
+    "notes": "",
+    "state": "empty",
+    "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
+    "tags": ["roadmap", "prioritization", "stakeholders", "trade-offs"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T12:00:00Z",
+    "updatedAt": "2026-02-09T12:00:00Z",
+    "schemaVersion": "1.0"
   },
   {
-    "id": "q-risk-mitigation",
+    "id": "q5",
+    "title": "De-risk a critical migration",
     "category": "Risk Mitigation",
+    "type": "conceptual",
     "difficulty": "Senior",
-    "prompt": "Describe how you de-risk a critical migration.",
-    "brief": "Cover phased rollout, backups, and monitoring.",
-    "prompts": [
-      "What is the rollback plan?",
-      "How do you test in production?",
-      "How do you monitor success?"
-    ]
+    "bullets": [
+      "Define blast radius and rollback plan",
+      "Stage migrations with feature flags",
+      "Validate data integrity and parity",
+      "Set alert thresholds and runbooks",
+      "Communicate risk and timelines"
+    ],
+    "diagramHints": {
+      "shape": "funnel",
+      "nodes": ["Plan", "Pilot", "Phased", "Cutover"],
+      "edges": ["rollback", "verify", "monitor"]
+    },
+    "examples": ["canary", "backfill", "rollback"],
+    "notes": "",
+    "state": "empty",
+    "progress": {"lastReviewed": null, "reviewCount": 0, "difficultyMark": ""},
+    "tags": ["migration", "risk", "rollback", "observability"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T12:00:00Z",
+    "updatedAt": "2026-02-09T12:00:00Z",
+    "schemaVersion": "1.0"
   }
 ]

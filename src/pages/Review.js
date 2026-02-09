@@ -11,7 +11,7 @@ export function renderReview({
   onStyleChange
 }) {
   const page = document.createElement('main');
-    page.className = 'mx-auto flex min-h-screen max-w-4xl flex-col px-6 app-page';
+  page.className = 'mx-auto flex min-h-screen max-w-4xl flex-col px-6 app-page';
 
   const topBar = createTopBar({
     theme,
@@ -46,7 +46,7 @@ export function renderReview({
     item.type = 'button';
     item.className =
       'flex w-full items-center justify-between app-card px-5 py-4 text-left text-sm font-semibold transition app-focus';
-    item.textContent = `${question.prompt}`;
+    item.textContent = `${question.title}`;
 
     const status = document.createElement('span');
     status.className =

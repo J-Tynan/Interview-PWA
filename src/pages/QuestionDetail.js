@@ -39,19 +39,33 @@ export function renderQuestionDetail({
   const header = document.createElement('section');
   header.className = 'mt-6 app-card p-6';
   header.innerHTML = `
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] app-muted">${question.category}</p>
-    <h1 class="mt-3 text-2xl font-semibold">${question.prompt}</h1>
-    <p class="mt-3 text-sm app-muted">${question.brief}</p>
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] app-muted">${question.category} · ${question.difficulty}</p>
+    <h1 class="mt-3 text-2xl font-semibold">${question.title}</h1>
+    <p class="mt-3 text-sm app-muted">Type: ${question.type}</p>
   `;
 
   const list = document.createElement('ul');
   list.className = 'mt-4 space-y-2 text-sm app-muted';
-  question.prompts.forEach((item) => {
+  (question.bullets || []).forEach((item) => {
     const li = document.createElement('li');
     li.textContent = `• ${item}`;
     list.append(li);
   });
   header.append(list);
+
+  if (question.examples && question.examples.length) {
+    const examples = document.createElement('div');
+    examples.className = 'mt-4 flex flex-wrap gap-2';
+
+    question.examples.forEach((item) => {
+      const chip = document.createElement('span');
+      chip.className = 'app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
+      chip.textContent = item;
+      examples.append(chip);
+    });
+
+    header.append(examples);
+  }
 
   const editor = createEditor({
     value: note,
