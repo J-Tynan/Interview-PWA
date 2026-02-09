@@ -110,14 +110,27 @@ export function renderQuestionDetail({
   const currentRecord = record ? { ...record } : createDefaultRecord(question);
   stateBadge.textContent = `State: ${formatState(currentRecord.state)}`;
 
+  const isNarrative = question.type === 'narrative';
+
   const bulletStepper = createBulletStepper({
     bullets: question.bullets || [],
-    initialIndex: 0
+    initialIndex: 0,
+    labelText: isNarrative ? 'Sections' : 'Prompts',
+    stepLabel: isNarrative ? 'Section' : 'Step',
+    onStepChange: (index) => {
+      notesEditor.setActiveIndex(index);
+      diagram.setActiveIndex(index);
+    }
   });
 
   const notesEditor = createNotesEditor({
     bullets: question.bullets || [],
     record: currentRecord,
+    questionType: question.type,
+    onSectionChange: (index) => {
+      bulletStepper.setActive(index, { focus: false, announce: true });
+      diagram.setActiveIndex(index);
+    },
     onCommit: async (nextRecord) => {
       const saved = await onSaveRecord(nextRecord);
       stateBadge.textContent = `State: ${formatState(saved.state)}`;

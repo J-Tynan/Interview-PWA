@@ -4,9 +4,13 @@ function buildSummary(diagramHints) {
   }
   const nodes = diagramHints.nodes || [];
   const edges = diagramHints.edges || [];
+  const flowShapes = ['flow', 'timeline', 'funnel'];
+  const flowText = flowShapes.includes(diagramHints.shape)
+    ? `Flow: ${nodes.join(' -> ')}`
+    : '';
   const nodeText = nodes.length ? `Nodes: ${nodes.join(', ')}` : 'No nodes provided';
   const edgeText = edges.length ? `Edges: ${edges.join(', ')}` : 'No edges provided';
-  return `${nodeText}. ${edgeText}.`;
+  return `${flowText ? `${flowText}. ` : ''}${nodeText}. ${edgeText}.`;
 }
 
 function layoutNodes(nodes) {
@@ -56,6 +60,8 @@ export function createDiagramRenderer({ diagramHints, title }) {
   const edges = diagramHints?.edges || [];
   const positions = layoutNodes(nodes);
   const isCircle = ['graph', 'funnel'].includes(diagramHints?.shape || '');
+  const nodeShapes = [];
+  const nodeTexts = [];
 
   positions.forEach((node, index) => {
     if (index < positions.length - 1) {
@@ -80,7 +86,7 @@ export function createDiagramRenderer({ diagramHints, title }) {
     }
   });
 
-  positions.forEach((node) => {
+  positions.forEach((node, index) => {
     if (isCircle) {
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', node.x);
@@ -88,6 +94,7 @@ export function createDiagramRenderer({ diagramHints, title }) {
       circle.setAttribute('r', '26');
       circle.setAttribute('class', 'app-diagram-node');
       svg.append(circle);
+      nodeShapes[index] = circle;
     } else {
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       rect.setAttribute('x', node.x - 40);
@@ -97,6 +104,7 @@ export function createDiagramRenderer({ diagramHints, title }) {
       rect.setAttribute('rx', '16');
       rect.setAttribute('class', 'app-diagram-node');
       svg.append(rect);
+      nodeShapes[index] = rect;
     }
 
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -106,6 +114,7 @@ export function createDiagramRenderer({ diagramHints, title }) {
     text.setAttribute('class', 'app-diagram-text');
     text.textContent = node.label;
     svg.append(text);
+    nodeTexts[index] = text;
   });
 
   const content = document.createElement('div');
@@ -127,9 +136,24 @@ export function createDiagramRenderer({ diagramHints, title }) {
 
   updateMode();
 
+  if (nodeShapes.length) {
+    nodeShapes[0].classList.add('app-diagram-node--active');
+    nodeTexts[0].classList.add('app-diagram-text--active');
+  }
+
   wrapper.append(header, content);
 
   return {
-    element: wrapper
+    element: wrapper,
+    setActiveIndex: (index) => {
+      nodeShapes.forEach((shape, nodeIndex) => {
+        const isActive = nodeIndex === index;
+        shape.classList.toggle('app-diagram-node--active', isActive);
+      });
+      nodeTexts.forEach((text, nodeIndex) => {
+        const isActive = nodeIndex === index;
+        text.classList.toggle('app-diagram-text--active', isActive);
+      });
+    }
   };
 }

@@ -79,9 +79,8 @@ export async function initShell(root) {
           question,
           record: state.records[questionId] || null,
           onSaveRecord: async (nextRecord) => {
-            const saved = await saveQuestionRecord(nextRecord);
-            state.records[saved.id] = saved;
-            return saved;
+            state.records[nextRecord.id] = nextRecord;
+            return nextRecord;
           },
           onDeleteRecord: async (id) => {
             await deleteQuestionRecord(id);

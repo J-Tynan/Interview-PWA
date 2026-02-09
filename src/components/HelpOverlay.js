@@ -23,6 +23,8 @@ export function createHelpOverlay(options = {}) {
     <li><span class="app-kbd">←</span> / <span class="app-kbd">→</span> Previous / next bullet</li>
     <li><span class="app-kbd">M</span> Mark difficulty</li>
     <li><span class="app-kbd">P</span> Toggle polished preview</li>
+    <li><span class="app-kbd">R</span> Mark reviewed</li>
+    <li><span class="app-kbd">C</span> Mark confident</li>
   `;
 
   const closeButton = document.createElement('button');

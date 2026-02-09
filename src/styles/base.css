@@ -393,6 +393,21 @@
   color: var(--app-muted);
 }
 
+.app-toast--pulse {
+  animation: app-toast-pulse 0.4s ease;
+}
+
+@keyframes app-toast-pulse {
+  from {
+    opacity: 0.6;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .app-toast--show {
   opacity: 1;
   transform: translateY(0);
@@ -400,6 +415,13 @@
 
 .app-toast--strong {
   color: var(--app-text);
+}
+
+.app-banner {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--app-radius-sm);
+  border: 1px dashed var(--app-border);
+  background: var(--app-input);
 }
 
 .app-overlay {
@@ -443,10 +465,19 @@
   stroke-width: 2;
 }
 
+.app-diagram-node--active {
+  stroke: var(--app-accent);
+  fill: var(--app-input);
+}
+
 .app-diagram-text {
   fill: var(--app-text);
   font-size: 12px;
   font-weight: 600;
+}
+
+.app-diagram-text--active {
+  fill: var(--app-accent);
 }
 
 .app-diagram-line {

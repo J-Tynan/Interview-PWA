@@ -1,4 +1,10 @@
-export function createBulletStepper({ bullets = [], initialIndex = 0 } = {}) {
+export function createBulletStepper({
+  bullets = [],
+  initialIndex = 0,
+  labelText = 'Prompts',
+  stepLabel = 'Step',
+  onStepChange
+} = {}) {
   const wrapper = document.createElement('section');
   wrapper.className = 'mt-6 app-card p-5';
 
@@ -7,7 +13,7 @@ export function createBulletStepper({ bullets = [], initialIndex = 0 } = {}) {
 
   const label = document.createElement('p');
   label.className = 'text-xs font-semibold uppercase tracking-[0.2em] app-muted';
-  label.textContent = 'Prompts';
+  label.textContent = labelText;
 
   const indicator = document.createElement('span');
   indicator.className = 'text-xs font-semibold app-muted';
@@ -87,7 +93,7 @@ export function createBulletStepper({ bullets = [], initialIndex = 0 } = {}) {
       liveRegion.textContent = '';
       return;
     }
-    liveRegion.textContent = `Step ${activeIndex + 1} of ${bullets.length}: ${bullets[activeIndex]}`;
+    liveRegion.textContent = `${stepLabel} ${activeIndex + 1} of ${bullets.length}: ${bullets[activeIndex]}`;
   }
 
   function revealStep(index) {
@@ -101,7 +107,7 @@ export function createBulletStepper({ bullets = [], initialIndex = 0 } = {}) {
     }, 360);
   }
 
-  function setActive(index) {
+  function setActive(index, { focus = false, announce = true } = {}) {
     const nextIndex = Math.max(0, Math.min(index, bullets.length - 1));
     const wasReveal = nextIndex > revealedIndex;
     activeIndex = nextIndex;
@@ -110,20 +116,26 @@ export function createBulletStepper({ bullets = [], initialIndex = 0 } = {}) {
       revealStep(nextIndex);
     }
     updateButtons();
-    announceStep();
+    if (announce) {
+      announceStep();
+    }
+    if (typeof onStepChange === 'function') {
+      onStepChange(activeIndex);
+    }
+    if (focus) {
+      buttons[activeIndex]?.focus();
+    }
   }
 
   function next() {
     if (activeIndex < bullets.length - 1) {
-      setActive(activeIndex + 1);
-      buttons[activeIndex]?.focus();
+      setActive(activeIndex + 1, { focus: true });
     }
   }
 
   function prev() {
     if (activeIndex > 0) {
-      setActive(activeIndex - 1);
-      buttons[activeIndex]?.focus();
+      setActive(activeIndex - 1, { focus: true });
     }
   }
 

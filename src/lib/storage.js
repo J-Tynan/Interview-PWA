@@ -4,7 +4,14 @@ const STORE_NAME = 'questionRecords';
 const LEGACY_STORE_NAME = 'notes';
 const LEGACY_STORAGE_KEY = 'interview-pwa-notes';
 const STORAGE_KEY = 'interview-pwa-question-records';
-const HISTORY_LIMIT = 10;
+const HISTORY_LIMIT = 3;
+
+function getStorage() {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  return localStorage;
+}
 
 function capHistory(history) {
   if (!Array.isArray(history)) {
@@ -18,7 +25,7 @@ function cloneRecord(record) {
 }
 
 async function openDB() {
-  if (!('indexedDB' in window)) {
+  if (typeof indexedDB === 'undefined') {
     return null;
   }
 
@@ -42,7 +49,11 @@ async function openDB() {
 
 function loadFromLocalStorage() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const storage = getStorage();
+    if (!storage) {
+      return {};
+    }
+    const raw = storage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
@@ -50,7 +61,11 @@ function loadFromLocalStorage() {
 }
 
 function saveToLocalStorage(records) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  const storage = getStorage();
+  if (!storage) {
+    return;
+  }
+  storage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
 export async function getAllQuestionRecords() {
@@ -97,6 +112,7 @@ export async function getQuestionRecord(id) {
 export async function saveQuestionRecord(record) {
   const nextRecord = {
     ...cloneRecord(record),
+    updatedAt: record.updatedAt || new Date().toISOString(),
     history: capHistory(record.history)
   };
   const db = await openDB().catch(() => null);
@@ -138,7 +154,11 @@ export async function getLegacyNotes() {
   const db = await openDB().catch(() => null);
   if (!db) {
     try {
-      return JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || '{}');
+      const storage = getStorage();
+      if (!storage) {
+        return {};
+      }
+      return JSON.parse(storage.getItem(LEGACY_STORAGE_KEY) || '{}');
     } catch {
       return {};
     }

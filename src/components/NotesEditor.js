@@ -1,3 +1,5 @@
+import { saveQuestionRecord } from '../lib/storage.js';
+
 const MODES = {
   PLAIN: 'plain',
   STRUCTURED: 'structured',
@@ -26,14 +28,15 @@ function getPlainText(notes) {
   return '';
 }
 
-function buildPreviewText(notes, sections) {
+function buildPreviewText(notes, sections, bullets) {
   if (isStructuredNotes(notes)) {
     const content = sections.map((section, index) => {
       const value = section.trim();
       if (!value) {
         return '';
       }
-      return `${index + 1}. ${value}`;
+      const label = bullets[index] ? bullets[index].trim() : `Prompt ${index + 1}`;
+      return `${label}\n${value}`;
     }).filter(Boolean);
     return content.join('\n');
   }
@@ -50,13 +53,31 @@ function hasNoteContent(notes, sections) {
   return false;
 }
 
-export function createNotesEditor({ bullets, record, onCommit }) {
+export function createNotesEditor({ bullets, record, onCommit, questionType, onSectionChange }) {
   const wrapper = document.createElement('section');
   wrapper.className = 'mt-6 app-card p-5';
 
   let currentRecord = { ...record };
-  let currentMode = currentRecord.notesMode || (isStructuredNotes(currentRecord.notes) ? MODES.STRUCTURED : MODES.PLAIN);
-  let lastEditMode = currentMode === MODES.POLISHED ? MODES.PLAIN : currentMode;
+  const getDefaultMode = () => {
+    if (currentRecord.notesMode) {
+      return currentRecord.notesMode;
+    }
+    if (isStructuredNotes(currentRecord.notes)) {
+      return MODES.STRUCTURED;
+    }
+    if (questionType === 'narrative') {
+      return MODES.STRUCTURED;
+    }
+    if (Array.isArray(bullets) && bullets.length >= 3) {
+      return MODES.STRUCTURED;
+    }
+    return MODES.PLAIN;
+  };
+
+  let currentMode = getDefaultMode();
+  let lastEditMode = currentMode === MODES.POLISHED
+    ? (isStructuredNotes(currentRecord.notes) ? MODES.STRUCTURED : MODES.PLAIN)
+    : currentMode;
 
   let plainText = getPlainText(currentRecord.notes);
   let sections = isStructuredNotes(currentRecord.notes)
@@ -107,7 +128,7 @@ export function createNotesEditor({ bullets, record, onCommit }) {
   emptyTip.textContent = "Tip: use Structured mode to map answers to the interviewer's prompts.";
 
   const structuredTip = document.createElement('p');
-  structuredTip.className = 'text-xs app-muted';
+  structuredTip.className = 'app-banner text-xs app-muted';
   structuredTip.textContent = 'We moved your draft into section 1. Distribute it across the prompts.';
 
   const plainArea = document.createElement('textarea');
@@ -121,10 +142,13 @@ export function createNotesEditor({ bullets, record, onCommit }) {
   const structuredInputs = bullets.map((bullet, index) => {
     const container = document.createElement('div');
     container.className = 'space-y-2';
+    container.setAttribute('role', 'region');
 
     const label = document.createElement('p');
     label.className = 'text-xs font-semibold uppercase tracking-[0.2em] app-muted';
-    label.textContent = `Prompt ${index + 1}`;
+    label.id = `notes-section-${record.id}-${index}`;
+    label.textContent = bullet?.trim() || `Prompt ${index + 1}`;
+    container.setAttribute('aria-labelledby', label.id);
 
     const input = document.createElement('textarea');
     input.className = 'min-h-[120px] w-full app-input p-3 text-sm app-focus';
@@ -135,6 +159,17 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     structuredWrap.append(container);
     return input;
   });
+
+  const setActiveSection = (activeIndex) => {
+    structuredInputs.forEach((input, index) => {
+      const container = input.parentElement;
+      const isActive = index === activeIndex;
+      input.setAttribute('aria-current', isActive ? 'true' : 'false');
+      if (container) {
+        container.setAttribute('aria-current', isActive ? 'true' : 'false');
+      }
+    });
+  };
 
   const polishedWrap = document.createElement('div');
   polishedWrap.className = 'space-y-3';
@@ -158,7 +193,7 @@ export function createNotesEditor({ bullets, record, onCommit }) {
   const confirmPolishedButton = document.createElement('button');
   confirmPolishedButton.type = 'button';
   confirmPolishedButton.className = 'app-button-outline px-3 py-1 text-xs font-semibold uppercase tracking-wide app-focus';
-  confirmPolishedButton.textContent = 'Mark as polished';
+  confirmPolishedButton.textContent = 'Confirm polished';
 
   polishedCta.append(copyButton, confirmPolishedButton, practiceButton);
   polishedWrap.append(polishedPreview, polishedCta);
@@ -188,16 +223,29 @@ export function createNotesEditor({ bullets, record, onCommit }) {
 
   actions.append(saveButton, resetButton, revertButton, reviewButton);
 
+  const shortcutHint = document.createElement('p');
+  shortcutHint.className = 'text-xs app-muted';
+  shortcutHint.textContent = 'Shortcuts: Ctrl/Cmd+S save · P polished · R reviewed · C confident';
+
   const toast = document.createElement('div');
   toast.className = 'app-toast';
   toast.setAttribute('aria-live', 'polite');
 
-  body.append(emptyTip, structuredTip, plainArea, structuredWrap, polishedWrap, actions, toast);
+  body.append(emptyTip, structuredTip, plainArea, structuredWrap, polishedWrap, actions, shortcutHint, toast);
 
   wrapper.append(header, metaRow, body);
 
   let autosaveTimer = null;
   let lastSavedSignature = '';
+
+  const buildSaveMessage = (timestamp) => (
+    `Saved — your notes are private to this device. (${formatTime(timestamp)})`
+  );
+
+  const pushHistory = (history, snapshot) => {
+    const next = [...(history || []), snapshot];
+    return next.slice(-3);
+  };
 
   function getNotesSignature(nextNotes) {
     return JSON.stringify(nextNotes);
@@ -234,30 +282,38 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     modeButtons.forEach((button, mode) => {
       button.setAttribute('aria-pressed', mode === currentMode ? 'true' : 'false');
     });
+
+    if (showStructured) {
+      const activeIndex = structuredInputs.findIndex((input) => input.getAttribute('aria-current') === 'true');
+      setActiveSection(activeIndex >= 0 ? activeIndex : 0);
+    }
   }
 
   function updatePreview() {
-    polishedPreview.textContent = buildPreviewText(buildNotesPayload(), sections) || 'No notes yet.';
+    polishedPreview.textContent = buildPreviewText(buildNotesPayload(), sections, bullets) || 'No notes yet.';
   }
 
   function updateSavedMeta(timestamp) {
     savedMeta.textContent = timestamp ? `Last saved ${formatTime(timestamp)}` : 'Not saved yet';
   }
 
-  async function commit(nextRecord, message, isStrong = false) {
-    const saved = await onCommit(nextRecord, { message, isStrong });
-    currentRecord = saved || nextRecord;
+  async function commit(nextRecord) {
+    const saved = await saveQuestionRecord(nextRecord);
+    const committed = await onCommit(saved);
+    currentRecord = committed || saved;
     updateSavedMeta(currentRecord.updatedAt);
     updateDifficultyBadge();
     return currentRecord;
   }
 
-  function showToast(message, isStrong) {
+  function showToast(message, { isStrong = false, pulse = false } = {}) {
     toast.textContent = message;
     toast.classList.toggle('app-toast--strong', Boolean(isStrong));
+    toast.classList.toggle('app-toast--pulse', Boolean(pulse));
     toast.classList.add('app-toast--show');
     window.setTimeout(() => {
       toast.classList.remove('app-toast--show');
+      toast.classList.remove('app-toast--pulse');
     }, 1800);
   }
 
@@ -265,8 +321,11 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     const nextNotes = buildNotesPayload();
     const signature = getNotesSignature(nextNotes);
     const filledSections = sections.filter((section) => section.trim()).length;
+    const structuredThreshold = questionType === 'narrative'
+      ? Math.min(2, bullets.length)
+      : Math.ceil(bullets.length * 0.5);
     const shouldBeStructured =
-      currentMode === MODES.STRUCTURED && filledSections >= Math.ceil(bullets.length * 0.5);
+      currentMode === MODES.STRUCTURED && filledSections >= structuredThreshold;
 
     let nextState = currentRecord.state || 'empty';
     if (hasNoteContent(nextNotes, sections) && nextState === 'empty') {
@@ -290,20 +349,25 @@ export function createNotesEditor({ bullets, record, onCommit }) {
       updatedAt: currentRecord.updatedAt
     };
 
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       notes: nextNotes,
       notesMode: currentMode,
       state: nextState,
-      updatedAt: new Date().toISOString(),
-      history: [...(currentRecord.history || []), snapshot]
+      progress: {
+        ...(currentRecord.progress || {}),
+        updatedAt: now
+      },
+      updatedAt: now,
+      history: pushHistory(currentRecord.history, snapshot)
     };
 
     lastSavedSignature = signature;
-    await commit(nextRecord, manual ? 'Saved — your notes are private to this device.' : 'Saved', manual);
+    await commit(nextRecord);
 
-    const timeLabel = formatTime(nextRecord.updatedAt);
-    showToast(manual ? 'Saved — your notes are private to this device.' : `Saved · ${timeLabel}`, manual);
+    const message = buildSaveMessage(nextRecord.updatedAt);
+    showToast(message, { isStrong: manual, pulse: manual });
   }
 
   function scheduleAutosave() {
@@ -317,14 +381,15 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     if (currentMode === nextMode) {
       return;
     }
-    structuredTip.dataset.show = '';
-    if (nextMode === MODES.STRUCTURED && !isStructuredNotes(currentRecord.notes)) {
+    let didMigrate = false;
+    if (nextMode === MODES.STRUCTURED && currentMode === MODES.PLAIN) {
       if (plainText.trim() && !sections.some((section) => section.trim())) {
         sections[0] = plainText.trim();
         structuredInputs[0].value = sections[0];
-        structuredTip.dataset.show = 'true';
+        didMigrate = true;
       }
     }
+    structuredTip.dataset.show = didMigrate ? 'true' : '';
 
     if (nextMode !== MODES.POLISHED) {
       lastEditMode = nextMode;
@@ -346,14 +411,39 @@ export function createNotesEditor({ bullets, record, onCommit }) {
       sections[index] = input.value;
       scheduleAutosave();
     });
+    input.addEventListener('focus', () => {
+      setActiveSection(index);
+      if (typeof onSectionChange === 'function') {
+        onSectionChange(index);
+      }
+    });
   });
 
   saveButton.addEventListener('click', () => saveNotes({ manual: true }));
 
   wrapper.addEventListener('keydown', (event) => {
-    if (event.key.toLowerCase() === 's' && event.ctrlKey) {
+    const key = event.key.toLowerCase();
+    const tag = event.target.tagName;
+    const isTyping = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+    if (key === 's' && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       saveNotes({ manual: true });
+      return;
+    }
+
+    if (isTyping) {
+      return;
+    }
+
+    if (key === 'r') {
+      event.preventDefault();
+      reviewButton.click();
+    }
+
+    if (key === 'c' && currentMode === MODES.POLISHED) {
+      event.preventDefault();
+      practiceButton.click();
     }
   });
 
@@ -369,13 +459,18 @@ export function createNotesEditor({ bullets, record, onCommit }) {
       progress: currentRecord.progress,
       updatedAt: currentRecord.updatedAt
     };
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       notes: '',
       notesMode: MODES.PLAIN,
       state: 'empty',
-      updatedAt: new Date().toISOString(),
-      history: [...(currentRecord.history || []), snapshot]
+      progress: {
+        ...(currentRecord.progress || {}),
+        updatedAt: now
+      },
+      updatedAt: now,
+      history: pushHistory(currentRecord.history, snapshot)
     };
     plainText = '';
     sections = new Array(bullets.length).fill('');
@@ -385,8 +480,8 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     plainArea.value = '';
     setMode(MODES.PLAIN);
     lastSavedSignature = '';
-    await commit(nextRecord, 'Saved', false);
-    showToast('Saved · cleared', false);
+    await commit(nextRecord);
+    showToast('Reset to empty', { isStrong: false });
   });
 
   revertButton.addEventListener('click', async () => {
@@ -398,13 +493,17 @@ export function createNotesEditor({ bullets, record, onCommit }) {
       return;
     }
     const snapshot = history[history.length - 1];
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       notes: snapshot.notes,
       notesMode: snapshot.notesMode || MODES.PLAIN,
       state: snapshot.state || 'draft',
-      progress: snapshot.progress || currentRecord.progress,
-      updatedAt: new Date().toISOString(),
+      progress: {
+        ...(snapshot.progress || currentRecord.progress || {}),
+        updatedAt: now
+      },
+      updatedAt: now,
       history: history.slice(0, -1)
     };
     plainText = getPlainText(nextRecord.notes);
@@ -420,8 +519,8 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     }
     plainArea.value = plainText;
     lastSavedSignature = getNotesSignature(nextRecord.notes);
-    await commit(nextRecord, 'Saved', false);
-    showToast('Reverted to last save', false);
+    await commit(nextRecord);
+    showToast('Reverted to last save', { isStrong: false });
   });
 
   reviewButton.addEventListener('click', async () => {
@@ -436,8 +535,8 @@ export function createNotesEditor({ bullets, record, onCommit }) {
       },
       updatedAt: now
     };
-    await commit(nextRecord, 'Saved', false);
-    showToast('Marked as reviewed', false);
+    await commit(nextRecord);
+    showToast('Marked as reviewed', { isStrong: false });
   });
 
   copyButton.addEventListener('click', async () => {
@@ -450,23 +549,35 @@ export function createNotesEditor({ bullets, record, onCommit }) {
   });
 
   practiceButton.addEventListener('click', async () => {
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       state: 'confident',
-      updatedAt: new Date().toISOString()
+      notesMode: MODES.POLISHED,
+      progress: {
+        ...(currentRecord.progress || {}),
+        updatedAt: now
+      },
+      updatedAt: now
     };
-    await commit(nextRecord, 'Saved', false);
-    showToast('Marked confident', false);
+    await commit(nextRecord);
+    showToast('Marked confident', { isStrong: false });
   });
 
   confirmPolishedButton.addEventListener('click', async () => {
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       state: 'polished',
-      updatedAt: new Date().toISOString()
+      notesMode: MODES.POLISHED,
+      progress: {
+        ...(currentRecord.progress || {}),
+        updatedAt: now
+      },
+      updatedAt: now
     };
-    await commit(nextRecord, 'Saved', false);
-    showToast('Marked polished', false);
+    await commit(nextRecord);
+    showToast('Marked polished', { isStrong: false });
   });
 
   function togglePolished() {
@@ -474,19 +585,21 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     setMode(nextMode);
   }
 
-  function markDifficulty() {
+  async function markDifficulty() {
     const current = currentRecord.progress?.difficultyMark || '';
     const next = current ? '' : 'needs-work';
+    const now = new Date().toISOString();
     const nextRecord = {
       ...currentRecord,
       progress: {
         ...(currentRecord.progress || {}),
-        difficultyMark: next
+        difficultyMark: next,
+        updatedAt: now
       },
-      updatedAt: new Date().toISOString()
+      updatedAt: now
     };
-    commit(nextRecord, 'Saved', false);
-    showToast(`Difficulty mark ${next ? 'added' : 'cleared'}`, false);
+    await commit(nextRecord);
+    showToast(`Difficulty mark ${next ? 'added' : 'cleared'}`, { isStrong: false });
   }
 
   function hasNotes() {
@@ -510,6 +623,9 @@ export function createNotesEditor({ bullets, record, onCommit }) {
     hasNotes,
     togglePolished,
     markDifficulty,
-    setMode
+    setMode,
+    setActiveIndex: (index) => {
+      setActiveSection(index);
+    }
   };
 }
