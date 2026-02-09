@@ -136,5 +136,275 @@
     "createdAt": "2026-02-09T12:00:00Z",
     "updatedAt": "2026-02-09T12:00:00Z",
     "schemaVersion": "1.0"
+  },
+  {
+    "id": "q6",
+    "title": "Explain a memory-leak debugging approach",
+    "category": "Programming",
+    "type": "process",
+    "difficulty": "Intermediate",
+    "bullets": [
+      "Describe how you detect and reproduce the leak",
+      "List tools and metrics to identify the source",
+      "Isolate the offending component and root cause",
+      "Propose fixes and validate with regression tests"
+    ],
+    "diagramHints": {
+      "shape": "timeline",
+      "nodes": ["Load", "Heap Snapshot", "GC", "Service"],
+      "edges": ["allocation", "retention", "collection"]
+    },
+    "examples": ["heap-snapshot", "profiler", "gc-metrics"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["memory-leak", "profiling", "heap-snapshot"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q7",
+    "title": "Design a read-heavy caching layer",
+    "category": "System Design",
+    "type": "system",
+    "difficulty": "Senior",
+    "bullets": [
+      "Clarify read/write ratios and consistency needs",
+      "Choose cache topology and invalidation strategy",
+      "Plan for cache warming and cold-starts",
+      "Define metrics and fallback behavior on miss"
+    ],
+    "diagramHints": {
+      "shape": "graph",
+      "nodes": ["Client", "Cache", "API", "DB"],
+      "edges": ["cache-hit", "cache-miss", "invalidate"]
+    },
+    "examples": ["cache-aside", "ttl", "stale-while-revalidate"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["caching", "cache-invalidation", "consistency"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q8",
+    "title": "Tell a time you mentored a junior engineer",
+    "category": "Behavioral",
+    "type": "narrative",
+    "difficulty": "Core",
+    "bullets": [
+      "Set the scene and the mentee's challenge",
+      "Explain your mentoring approach and actions",
+      "Describe measurable progress and outcomes",
+      "Reflect on lessons and how you adapted"
+    ],
+    "diagramHints": {
+      "shape": "flow",
+      "nodes": ["Context", "Action", "Feedback", "Outcome"],
+      "edges": ["mentor-guidance", "learning-loop"]
+    },
+    "examples": ["pair-programming", "career-growth", "feedback"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["mentorship", "coaching", "feedback-loop"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q9",
+    "title": "Estimate effort for a new feature",
+    "category": "Project Management",
+    "type": "judgment",
+    "difficulty": "Intermediate",
+    "bullets": [
+      "Gather assumptions and acceptance criteria",
+      "Break work into deliverable tasks and dependencies",
+      "Choose estimation technique and justify ranges",
+      "Communicate uncertainty and contingency plans"
+    ],
+    "diagramHints": {
+      "shape": "matrix",
+      "nodes": ["Assumptions", "Tasks", "Estimates", "Risks"],
+      "edges": ["dependency", "uncertainty"]
+    },
+    "examples": ["t-shirt-sizing", "three-point-estimate", "dependencies"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["estimation", "planning", "uncertainty"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q10",
+    "title": "Explain eventual consistency trade-offs",
+    "category": "Programming",
+    "type": "conceptual",
+    "difficulty": "Senior",
+    "bullets": [
+      "Define eventual consistency and common models",
+      "Describe scenarios where it helps or hurts",
+      "List techniques to mitigate user-visible anomalies",
+      "Explain how to test and monitor consistency"
+    ],
+    "diagramHints": {
+      "shape": "side-by-side",
+      "nodes": ["Replica A", "Replica B", "Client"],
+      "edges": ["replication-lag", "read-after-write"]
+    },
+    "examples": ["replication-lag", "read-your-writes", "conflict-resolution"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["consistency", "replication", "trade-offs"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q11",
+    "title": "Handle a production incident postmortem",
+    "category": "Risk Mitigation",
+    "type": "process",
+    "difficulty": "Senior",
+    "bullets": [
+      "Describe incident detection and initial response",
+      "Outline data collection and timeline reconstruction",
+      "Identify root cause and contributing factors",
+      "Propose corrective actions and preventive measures"
+    ],
+    "diagramHints": {
+      "shape": "timeline",
+      "nodes": ["Detection", "Mitigation", "Investigation", "Remediation"],
+      "edges": ["alerts", "actions", "follow-up"]
+    },
+    "examples": ["postmortem", "root-cause", "runbook"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["incident-response", "postmortem", "runbooks"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q12",
+    "title": "Compare monolith vs microservices",
+    "category": "System Design",
+    "type": "conceptual",
+    "difficulty": "Intermediate",
+    "bullets": [
+      "Define characteristics of each architecture",
+      "List operational and organizational trade-offs",
+      "Describe migration considerations and anti-patterns",
+      "Recommend criteria for choosing one over the other"
+    ],
+    "diagramHints": {
+      "shape": "comparison",
+      "nodes": ["Monolith", "Microservices"],
+      "edges": ["coupling", "deployment-frequency"]
+    },
+    "examples": ["bounded-context", "deployment", "operational-overhead"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["architecture", "microservices", "monolith"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q13",
+    "title": "Resolve scope creep on a delivery",
+    "category": "Project Management",
+    "type": "judgment",
+    "difficulty": "Core",
+    "bullets": [
+      "Identify sources and examples of scope creep",
+      "Assess impact on timeline, cost, and quality",
+      "Negotiate scope changes with stakeholders",
+      "Document decisions and update the plan"
+    ],
+    "diagramHints": {
+      "shape": "flow",
+      "nodes": ["Request", "Impact", "Decision", "Plan"],
+      "edges": ["evaluate", "approve", "defer"]
+    },
+    "examples": ["change-control", "stakeholder-management", "scope"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["scope-creep", "change-control", "stakeholders"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q14",
+    "title": "Design a metrics-driven alerting strategy",
+    "category": "Risk Mitigation",
+    "type": "process",
+    "difficulty": "Intermediate",
+    "bullets": [
+      "Select key service-level indicators and thresholds",
+      "Define alerting rules and noise reduction tactics",
+      "Plan escalation paths and runbook actions",
+      "Continuously tune alerts based on signal quality"
+    ],
+    "diagramHints": {
+      "shape": "funnel",
+      "nodes": ["Metrics", "Alerts", "On-call", "Runbook"],
+      "edges": ["threshold", "escalation", "acknowledge"]
+    },
+    "examples": ["sli", "slo", "alert-fatigue"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["alerting", "sli-slo", "observability"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
+  },
+  {
+    "id": "q15",
+    "title": "Explain trade-offs of eventual feature flags",
+    "category": "Programming",
+    "type": "judgment",
+    "difficulty": "Senior",
+    "bullets": [
+      "Describe feature-flag use cases and lifecycle",
+      "Discuss operational and technical trade-offs",
+      "Outline strategies for cleanup and technical debt",
+      "Explain monitoring and rollback practices"
+    ],
+    "diagramHints": {
+      "shape": "timeline",
+      "nodes": ["Develop", "Flagged Release", "Rollout", "Cleanup"],
+      "edges": ["toggle", "monitor", "remove"]
+    },
+    "examples": ["feature-flags", "canary", "technical-debt"],
+    "notes": "",
+    "state": "empty",
+    "progress": { "lastReviewed": null, "reviewCount": 0, "difficultyMark": "" },
+    "tags": ["feature-flags", "rollout", "technical-debt"],
+    "visualStyle": "Ivory-Editorial",
+    "createdAt": "2026-02-09T11:10:00Z",
+    "updatedAt": "2026-02-09T11:10:00Z",
+    "schemaVersion": "1.0"
   }
 ]

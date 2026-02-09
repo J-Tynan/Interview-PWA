@@ -1,22 +1,23 @@
-export function createQuestionCard({ question, isAnswered, onOpen }) {
+export function createQuestionCard({ question, isAnswered, onOpen, isCompact = false }) {
   const card = document.createElement('article');
-  card.className =
-    'group app-card p-5 transition app-focus cursor-pointer';
+  const baseClass = 'group app-card transition app-focus cursor-pointer';
+  card.className = isCompact ? `${baseClass} p-3` : `${baseClass} p-5`;
   card.tabIndex = 0;
   card.setAttribute('role', 'button');
   card.setAttribute('aria-pressed', 'false');
 
   const title = document.createElement('h3');
-  title.className = 'text-lg font-semibold';
+  title.className = isCompact ? 'text-base font-semibold' : 'text-lg font-semibold';
   title.textContent = question.title;
 
   const meta = document.createElement('p');
-  meta.className = 'mt-2 text-sm app-muted';
+  meta.className = isCompact ? 'mt-1 text-xs app-muted' : 'mt-2 text-sm app-muted';
   meta.textContent = `${question.category} · ${question.difficulty}`;
 
   const status = document.createElement('span');
-  status.className =
-    'mt-3 inline-flex items-center app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
+  status.className = isCompact
+    ? 'mt-2 inline-flex items-center app-pill px-2 py-1 text-[10px] font-semibold uppercase tracking-wide'
+    : 'mt-3 inline-flex items-center app-pill px-3 py-1 text-xs font-semibold uppercase tracking-wide';
   status.textContent = isAnswered ? 'Notes saved' : 'Needs notes';
 
   card.append(title, meta, status);
