@@ -23,6 +23,8 @@
   --app-accent-contrast: #ffffff;
   --app-button: #0f172a;
   --app-button-text: #ffffff;
+  --app-page-pt: 2.5rem;
+  --app-page-pb: 2.5rem;
 }
 
 :root[data-theme='dark'] {
@@ -209,6 +211,11 @@
   color: var(--app-text);
   font-family: var(--app-font);
   letter-spacing: var(--app-letter);
+}
+
+.app-page {
+  padding-top: var(--app-page-pt);
+  padding-bottom: var(--app-page-pb);
 }
 
 .app-card {

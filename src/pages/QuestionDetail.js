@@ -12,7 +12,7 @@ export function renderQuestionDetail({
   onStyleChange
 }) {
   const page = document.createElement('main');
-  page.className = 'mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-6';
+  page.className = 'mx-auto flex min-h-screen max-w-3xl flex-col px-6 app-page';
 
   const topBar = createTopBar({
     theme,
